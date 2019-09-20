@@ -10,6 +10,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'Invoke-RestMethod -uri ''https://www.netsparkercloud.com/api/1.0/scans/CreateFromPluginScanRequest'' -ContentType ''application/json; charset=UTF-8'' -Method POST -Headers @{ Authorization = "Basic $([System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($env:NETSPARKERUSERID +'':''+$env:NETSPARKERAPITOKEN)))"} -Body $(@{ WebsiteId=''f9b348c2-7cb2-409b-638b-aacd03957063''; ScanType=''FullWithPrimaryProfile''; VcsCommitInfoModel = @{CiBuildConfigurationName = $env:BUILD_DEFINITIONNAME; CiBuildHasChange = $env:BUILD_SOURCEVERSION; CiBuildId = $env:BUILD_BUILDID; CiBuildUrl= $env:RELEASE_RELEASEWEBURL; Committer= $env:BUILD_REQUESTEDFOR; IntegrationSystem = ''AzureDevOps''; VcsName = $env:BUILD_REPOSITORY_PROVIDER; VcsVersion = $env:BUILD_SOURCEVERSION};}| ConvertTo-Json)'
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
